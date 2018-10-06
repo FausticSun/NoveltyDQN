@@ -2,8 +2,16 @@ import gym
 
 if __name__ == "__main__":
     env = gym.make('BipedalWalkerHardcore-v2')
-    env.reset()
-    for _ in range(1000):
+
+    # get initial obsevation of the environment
+    observation = env.reset()
+
+    while (True):
         env.render()
-        env.step(env.action_space.sample()) # take a random action
+        print(observation);
+
+        # choose the action to take
+        action = env.action_space.sample()
+
+        observation, reward, isDone, info = env.step(action)
 
