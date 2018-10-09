@@ -27,4 +27,13 @@ At this point, your project should be able to run. To run the project, run the f
 python main.py
 '''
 
+To run [PyTorch DQN tutorial](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html), install matplotlib with
+'''
+pip install matplotlib
+'''
+and run
+'''
+python reinforcement_q_learning.py
+'''
+
 Note that this project runs on python 3.5.6
