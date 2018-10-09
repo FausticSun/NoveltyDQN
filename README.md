@@ -23,17 +23,17 @@ pip install box2d-py
 ```
 
 At this point, your project should be able to run. To run the project, run the following command in the root directory of the project
-'''
+```commandline
 python main.py
-'''
+```
 
 To run [PyTorch DQN tutorial](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html), install matplotlib with
-'''
+```commandline
 pip install matplotlib
-'''
+```
 and run
-'''
+```commandline
 python reinforcement_q_learning.py
-'''
+```
 
 Note that this project runs on python 3.5.6
