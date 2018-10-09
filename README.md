@@ -7,6 +7,7 @@ Training a DQN with novelty search to solve OpenAI Bipedal Walker Hardcore
 Download and install Anaconda on your machine 
 
 Create an Anaconda virtual environment and name it NoveltyDQN
+`conda create --name NoveltyDQN python=3.5.6`
 
 ```commandline
 # Activate the environment 
@@ -14,7 +15,10 @@ source activate NoveltyDQN**
 
 # Install openai gym
 pip install gym 
-pip install pytorch
+conda install pytorch torchvision -c pytorch
+
+# Box2D requirement in order to run the environment
+pip install box2d-py
 
 ```
 
