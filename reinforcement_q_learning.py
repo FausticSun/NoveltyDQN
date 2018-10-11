@@ -205,19 +205,14 @@ class DQN(nn.Module):
 
     def __init__(self):
         super(DQN, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=5, stride=2)
-        self.bn1 = nn.BatchNorm2d(16)
-        self.conv2 = nn.Conv2d(16, 32, kernel_size=5, stride=2)
-        self.bn2 = nn.BatchNorm2d(32)
-        self.conv3 = nn.Conv2d(32, 32, kernel_size=5, stride=2)
-        self.bn3 = nn.BatchNorm2d(32)
-        self.head = nn.Linear(448, 2)
+        self.fc1 = nn.Linear(4, 10)
+        self.fc2 = nn.Linear(10, 10)
+        self.head = nn.Linear(10, 2)
 
     def forward(self, x):
-        x = F.relu(self.bn1(self.conv1(x)))
-        x = F.relu(self.bn2(self.conv2(x)))
-        x = F.relu(self.bn3(self.conv3(x)))
-        return self.head(x.view(x.size(0), -1))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        return self.head(x)
 
 
 ######################################################################
@@ -269,11 +264,11 @@ def get_screen():
 
 
 env.reset()
-plt.figure()
-plt.imshow(get_screen().cpu().squeeze(0).permute(1, 2, 0).numpy(),
-           interpolation='none')
-plt.title('Example extracted screen')
-plt.show()
+# plt.figure()
+# plt.imshow(get_screen().cpu().squeeze(0).permute(1, 2, 0).numpy(),
+#            interpolation='none')
+# plt.title('Example extracted screen')
+# plt.show()
 
 
 ######################################################################
@@ -301,9 +296,9 @@ plt.show()
 BATCH_SIZE = 128
 GAMMA = 0.999
 EPS_START = 0.9
-EPS_END = 0.05
-EPS_DECAY = 200
-TARGET_UPDATE = 10
+EPS_END = 0.01
+EPS_DECAY = 10000
+TARGET_UPDATE = 20
 
 policy_net = DQN().to(device)
 target_net = DQN().to(device)
@@ -322,6 +317,7 @@ def select_action(state):
     sample = random.random()
     eps_threshold = EPS_END + (EPS_START - EPS_END) * \
         math.exp(-1. * steps_done / EPS_DECAY)
+    print(eps_threshold)
     steps_done += 1
     if sample > eps_threshold:
         with torch.no_grad():
@@ -421,24 +417,26 @@ def optimize_model():
 # the notebook and run lot more epsiodes.
 #
 
-num_episodes = 50
+num_episodes = 10000
 for i_episode in range(num_episodes):
     # Initialize the environment and state
-    env.reset()
-    last_screen = get_screen()
-    current_screen = get_screen()
-    state = current_screen - last_screen
+    state = env.reset()
+    state = torch.from_numpy(state).float().unsqueeze(0).to(device)
+    # last_screen = get_screen()
+    # current_screen = get_screen()
     for t in count():
         # Select and perform an action
         action = select_action(state)
-        _, reward, done, _ = env.step(action.item())
+        state, reward, done, _ = env.step(action.item())
+        state = torch.from_numpy(state).float().unsqueeze(0).to(device)
         reward = torch.tensor([reward], device=device)
 
         # Observe new state
-        last_screen = current_screen
-        current_screen = get_screen()
+        env.render()
+        # last_screen = current_screen
+        # current_screen = get_screen()
         if not done:
-            next_state = current_screen - last_screen
+            next_state = state
         else:
             next_state = None
 
