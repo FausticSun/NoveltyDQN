@@ -1,4 +1,6 @@
 *.h5
 *.dat
 
+!record.dat
+
 # to unignore specific data, just use the ! prefix
